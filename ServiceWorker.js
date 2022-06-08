@@ -1,9 +1,9 @@
 const cacheName = "Hymnkey-Fort!fy Demo-0.1";
 const contentToCache = [
-    "Build/iamkim17.github.io.loader.js",
-    "Build/iamkim17.github.io.framework.js.unityweb",
-    "Build/iamkim17.github.io.data.unityweb",
-    "Build/iamkim17.github.io.wasm.unityweb",
+    "Build/fortifybuild.loader.js",
+    "Build/fortifybuild.framework.js.unityweb",
+    "Build/fortifybuild.data.unityweb",
+    "Build/fortifybuild.wasm.unityweb",
     "TemplateData/style.css"
 
 ];
