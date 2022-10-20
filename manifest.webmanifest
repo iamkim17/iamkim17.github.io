@@ -1,11 +1,11 @@
 {
-    "name": "Fort!fy Demo",
-    "short_name": "Fort!fy Demo",
+    "name": "MindAR",
+    "short_name": "MindAR",
     "start_url": "index.html",
     "display": "fullscreen",
     "background_color": "#231F20",
     "theme_color": "#000",
-    "description": "Fort!fy Demo",
+    "description": "",
     "icons": [{
       "src": "TemplateData/icons/unity-logo-dark.png",
       "sizes": "144x144",

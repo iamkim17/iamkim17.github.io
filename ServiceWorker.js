@@ -1,9 +1,9 @@
-const cacheName = "Hymnkey-Fort!fy Demo-0.1";
+const cacheName = "Hymnkey-MindAR-0.1.0";
 const contentToCache = [
-    "Build/fortifybuild.loader.js",
-    "Build/fortifybuild.framework.js.unityweb",
-    "Build/fortifybuild.data.unityweb",
-    "Build/fortifybuild.wasm.unityweb",
+    "Build/build.loader.js",
+    "Build/build.framework.js.unityweb",
+    "Build/build.data.unityweb",
+    "Build/build.wasm.unityweb",
     "TemplateData/style.css"
 
 ];
