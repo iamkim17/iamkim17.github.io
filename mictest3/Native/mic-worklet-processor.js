@@ -16,7 +16,7 @@ class MicrophoneWorkletProcessor extends AudioWorkletProcessor {
     
       constructor() {
         super();
-        this._bufferSize = 4096;
+        this._bufferSize = 2048;
         this._buffer = new Float32Array(this._bufferSize);
         this._initBuffer();
 
