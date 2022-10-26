@@ -111,6 +111,7 @@
         progressBarFull.style.width = 100 * progress + "%";
       }).then((unityInstance) => {
         loadingBar.style.display = "none";
+        myGameInstance = unityInstance;
       }).catch((message) => {
         alert(message);
       });
@@ -118,7 +119,7 @@
     document.body.appendChild(script);
 
     function StartMic() {
-      unityInstance.SendMessage("Managers", "NotifyRecordingChange", MicState.Booting);
+      myGameInstance.SendMessage("Managers", "NotifyRecordingChange", MicState.Booting);
 
       if (!navigator.getUserMedia) {
         navigator.getUserMedia =
@@ -135,14 +136,14 @@
             start_microphone(stream);
           },
           function (e) {
-            unityInstance.SendMessage("Managers", "NotifyRecordingChange", MicState.NotActive);
+            myGameInstance.SendMessage("Managers", "NotifyRecordingChange", MicState.NotActive);
             alert('Error capturing audio.');
           }
         );
       }
       else {
         alert('getUserMedia not supported in this browser.');
-        unityInstance.SendMessage("Managers", "NotifyRecordingChange", MicState.NotActive);
+        myGameInstance.SendMessage("Managers", "NotifyRecordingChange", MicState.NotActive);
       }
     }
 
@@ -165,9 +166,9 @@
       recorder.onaudioprocess = function (e) {
         dstPtr = floatPCMPointer;
         floatPCM = e.inputBuffer.getChannelData(0);
-        unityInstance.SendMessage("Managers", "LogWrittenBuffer", floatPCM.length);
+        myGameInstance.SendMessage("Managers", "LogWrittenBuffer", floatPCM.length);
 
-        writeTarg = new Float32Array(unityInstance.Module.HEAP8.buffer, dstPtr, bufferSize);
+        writeTarg = new Float32Array(myGameInstance.Module.HEAP8.buffer, dstPtr, bufferSize);
         writeTarg.set(floatPCM);
       }
 
@@ -175,7 +176,7 @@
       microphone_stream.connect(recorder);
       recorder.connect(audioContext.destination)
 
-      unityInstance.SendMessage("Managers", "NotifyRecordingChange", MicState.Recording);
+      myGameInstance.SendMessage("Managers", "NotifyRecordingChange", MicState.Recording);
     }
 
     // called from WebMic.jslib's Recording_Stop()
@@ -190,7 +191,7 @@
       recorder = null;
       microphone_stream = null;
 
-      unityInstance.SendMessage("Managers", "NotifyRecordingChange", MicState.NotActive);
+      myGameInstance.SendMessage("Managers", "NotifyRecordingChange", MicState.NotActive);
     }
   </script>
 </body>
