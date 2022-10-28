@@ -24,10 +24,10 @@
     <div id="unity-warning"> </div>
   </div>
   <script>
+
     const el = document.getElementById('unity-canvas');
     el.addEventListener('touchstart', function () { window.focus() });
-  </script>
-  <script>
+
     window.addEventListener("load", function () {
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("ServiceWorker.js");
