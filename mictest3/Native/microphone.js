@@ -149,6 +149,7 @@ class UnityMicrophone {
             function getUserMediaSuccess(stream) {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "requestPermission", "data": "granted" });
                 console.log('✅ granted getUserMediaSuccess');
+                $("#unity-canvas").click();
                 window.focus();
                 document.ontouchstart = function () { window.focus(); };
                 document.onpointerdown = function () { window.focus(); };
