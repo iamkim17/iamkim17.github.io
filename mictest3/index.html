@@ -25,7 +25,7 @@
   </div>
   <script>
     const el = document.getElementById('unity-canvas');
-    el.addEventListener('touchstart', function () { window.focus() });
+    el.addEventListener("touchstart", function () { window.focus() });
     window.addEventListener("load", function () {
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("ServiceWorker.js");
