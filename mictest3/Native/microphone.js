@@ -129,9 +129,10 @@ class UnityMicrophone {
                     console.log('✅ window has focus');
                 } else {
                     console.log('⛔️ window does NOT have focus');
-                    window.focus();
-                    document.getElementById('unity-canvas').style.display = "block"
-                    document.getElementById('unity-canvas').style.zIndex = "999"
+                    document.ontouchstart = function () { window.focus(); };
+    document.onpointerdown = function () { window.focus(); };
+    document.onmousedown = function () { window.focus(); };
+    document.onmouseenter = function () { window.focus(); };
                 }
             return;
         }
@@ -141,9 +142,10 @@ class UnityMicrophone {
                     console.log('✅ window has focus');
                 } else {
                     console.log('⛔️ window does NOT have focus');
-                    window.focus();
-                    document.getElementById('unity-canvas').style.display = "block"
-                    document.getElementById('unity-canvas').style.zIndex = "999"
+                    document.ontouchstart = function () { window.focus(); };
+    document.onpointerdown = function () { window.focus(); };
+    document.onmousedown = function () { window.focus(); };
+    document.onmouseenter = function () { window.focus(); };
                 }
             navigator.mediaDevices.getUserMedia({ audio: true }).then(getUserMediaSuccess).catch(getUserMediaFailed);
 
@@ -244,9 +246,10 @@ class UnityMicrophone {
                     console.log('✅ window has focus');
                 } else {
                     console.log('⛔️ window does NOT have focus');
-                    window.focus();
-                    document.getElementById('unity-canvas').style.display = "block"
-                    document.getElementById('unity-canvas').style.zIndex = "999"
+                    document.ontouchstart = function () { window.focus(); };
+    document.onpointerdown = function () { window.focus(); };
+    document.onmousedown = function () { window.focus(); };
+    document.onmouseenter = function () { window.focus(); };
                 }
         this.recordingSource = this.audioContext.createMediaStreamSource(stream);
 
@@ -444,9 +447,10 @@ class UnityMicrophone {
                     console.log('✅ window has focus');
                 } else {
                     console.log('⛔️ window does NOT have focus');
-                    window.focus();
-                    document.getElementById('unity-canvas').style.display = "block"
-                    document.getElementById('unity-canvas').style.zIndex = "999"
+                    document.ontouchstart = function () { window.focus(); };
+    document.onpointerdown = function () { window.focus(); };
+    document.onmousedown = function () { window.focus(); };
+    document.onmouseenter = function () { window.focus(); };
                 }
         navigator.mediaDevices.enumerateDevices()
             .then(function (devices) {
