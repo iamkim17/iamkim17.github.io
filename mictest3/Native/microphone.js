@@ -45,7 +45,6 @@ class UnityMicrophone {
             if (this.audioContext.state === "suspended" || this.audioContext.state === "interrupted") {
                 console.log("resuming audioContext. state: " + this.audioContext.state);
                 this.audioContext.resume();
-                window.focus();
             }
         }, 1000);
     }
