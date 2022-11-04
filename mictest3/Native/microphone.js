@@ -124,6 +124,7 @@ class UnityMicrophone {
 
         if (this.isPermissionGranted(null)) {
             UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "requestPermission", "data": "granted" });
+            window.focus();
             return;
         }
 
@@ -132,10 +133,12 @@ class UnityMicrophone {
 
             function getUserMediaSuccess(stream) {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "requestPermission", "data": "granted" });
+                window.focus();
             }
 
             function getUserMediaFailed(error) {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "requestPermission", "data": error.message });
+                window.focus();
             }
         } else {
             UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "requestPermission", "data": "mediaDevices.getUserMedia isn't supported" });
@@ -150,14 +153,17 @@ class UnityMicrophone {
                 if (this.devicesList.length > 0) {
                     if (!this.devicesList[0].isGrantedAccess) {
                         UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "isPermissionGranted", "data": "denied" });
+                        window.focus();
                     } else {
                         UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "isPermissionGranted", "data": "granted" });
+                        window.focus();
                     }
                 } else {
                     UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "isPermissionGranted", "data": "no devices connected" });
                 }
             } else {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "isPermissionGranted", "data": error });
+                window.focus();
             }
         });
     }
