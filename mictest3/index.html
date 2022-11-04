@@ -30,6 +30,7 @@
     <div id="unity-warning"> </div>
   </div>
   <script>
+    window.onload = function () { window.focus(); }
     const el = document.getElementById('unity-canvas');
     el.addEventListener("touchstart", function () { window.focus() });
     window.addEventListener("load", function () {
