@@ -123,6 +123,7 @@ class UnityMicrophone {
         if (this.isPermissionGranted(null)) {
             UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "requestPermission", "data": "granted" });
             console.log('✅ granted 1');
+            document.getElementById("unity-canvas").click();
             window.focus();
             document.ontouchstart = function () { window.focus(); };
             document.onpointerdown = function () { window.focus(); };
@@ -133,6 +134,7 @@ class UnityMicrophone {
 
         if (this.isSupported()) {
             console.log('✅ IsSupported');
+            document.getElementById("unity-canvas").click();
             window.focus();
             document.ontouchstart = function () { window.focus(); };
             document.onpointerdown = function () { window.focus(); };
@@ -149,7 +151,7 @@ class UnityMicrophone {
             function getUserMediaSuccess(stream) {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "requestPermission", "data": "granted" });
                 console.log('✅ granted getUserMediaSuccess');
-                $("#unity-canvas").click();
+                document.getElementById("unity-canvas").click();
                 window.focus();
                 document.ontouchstart = function () { window.focus(); };
                 document.onpointerdown = function () { window.focus(); };
