@@ -30,6 +30,7 @@ class UnityMicrophone {
         this.recordingBufferCallback = null;
         this.recordingEndedCallback = null;
         this.recordingStartedCallback = null;
+        this.$window.focus();
 
         if (UnityMicrophone.AUDIO_WORKLET === true) {
             this.audioContext.audioWorklet.addModule('./Native/mic-worklet-processor.js')
@@ -50,7 +51,7 @@ class UnityMicrophone {
 
     devices(callback) {
         var unityCallback = callback;
-
+        this.$window.focus();
         this.refreshDevicesList((status, error) => {
             if (status === true) {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "devices", "data": UnityWebGLTools.objectToJSON({ "array": UnityMicrophone.INSTANCE.devicesList }) });
@@ -64,7 +65,7 @@ class UnityMicrophone {
         // doesnt matter which device id
         if (!this.recording)
             return;
-
+        this.$window.focus();
         this.recordingEndedCallback = callback;
 
         if (UnityMicrophone.AUDIO_WORKLET === true) {
@@ -98,7 +99,7 @@ class UnityMicrophone {
 
         if (navigator.mediaDevices.getUserMedia) {
             var constraints = null;
-
+            this.$window.focus();
             if (deviceId === null || !navigator.mediaDevices.getSupportedConstraints().deviceId) {
                 constraints = {
                     audio: true,
@@ -124,24 +125,26 @@ class UnityMicrophone {
 
         if (this.isPermissionGranted(null)) {
             UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "requestPermission", "data": "granted" });
-            window.focus();
+            this.$window.focus();
             return;
         }
 
         if (this.isSupported()) {
+            this.$window.focus();
             navigator.mediaDevices.getUserMedia({ audio: true }).then(getUserMediaSuccess).catch(getUserMediaFailed);
 
             function getUserMediaSuccess(stream) {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "requestPermission", "data": "granted" });
-                window.focus();
+                this.$window.focus();
             }
 
             function getUserMediaFailed(error) {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "requestPermission", "data": error.message });
-                window.focus();
+                this.$window.focus();
             }
         } else {
             UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "requestPermission", "data": "mediaDevices.getUserMedia isn't supported" });
+            this.$window.focus();
         }
     }
 
@@ -153,17 +156,18 @@ class UnityMicrophone {
                 if (this.devicesList.length > 0) {
                     if (!this.devicesList[0].isGrantedAccess) {
                         UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "isPermissionGranted", "data": "denied" });
-                        window.focus();
+                        this.$window.focus();
                     } else {
                         UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "isPermissionGranted", "data": "granted" });
-                        window.focus();
+                        this.$window.focus();
                     }
                 } else {
+                    this.$window.focus();
                     UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "isPermissionGranted", "data": "no devices connected" });
                 }
             } else {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "isPermissionGranted", "data": error });
-                window.focus();
+                this.$window.focus();
             }
         });
     }
@@ -210,7 +214,7 @@ class UnityMicrophone {
 
     getUserMediaSuccessForRecording(stream) {
         this.recordingBuffer = [];
-
+        this.$window.focus();
         this.recordingSource = this.audioContext.createMediaStreamSource(stream);
 
         if (UnityMicrophone.AUDIO_WORKLET === true) {
@@ -403,7 +407,7 @@ class UnityMicrophone {
             callback(false, "enumerateDevices() not supported");
             return;
         }
-
+        this.$window.focus();
         navigator.mediaDevices.enumerateDevices()
             .then(function (devices) {
                 var outputDevicesArr = [];
