@@ -30,7 +30,6 @@ class UnityMicrophone {
         this.recordingBufferCallback = null;
         this.recordingEndedCallback = null;
         this.recordingStartedCallback = null;
-        window.focus();
 
         if (UnityMicrophone.AUDIO_WORKLET === true) {
             this.audioContext.audioWorklet.addModule('./Native/mic-worklet-processor.js')
@@ -51,7 +50,6 @@ class UnityMicrophone {
 
     devices(callback) {
         var unityCallback = callback;
-        window.focus();
         this.refreshDevicesList((status, error) => {
             if (status === true) {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "devices", "data": UnityWebGLTools.objectToJSON({ "array": UnityMicrophone.INSTANCE.devicesList }) });
@@ -65,7 +63,6 @@ class UnityMicrophone {
         // doesnt matter which device id
         if (!this.recording)
             return;
-        window.focus();
         this.recordingEndedCallback = callback;
 
         if (UnityMicrophone.AUDIO_WORKLET === true) {
@@ -266,14 +263,15 @@ class UnityMicrophone {
 
     getUserMediaSuccessForRecording(stream) {
         this.recordingBuffer = [];
-                        if (document.hasFocus()) {
+                if (document.hasFocus()) {
                     console.log('✅ window has focus');
                 } else {
                     console.log('⛔️ window does NOT have focus');
+                    window.focus();
                     document.ontouchstart = function () { window.focus(); };
-    document.onpointerdown = function () { window.focus(); };
-    document.onmousedown = function () { window.focus(); };
-    document.onmouseenter = function () { window.focus(); };
+                    document.onpointerdown = function () { window.focus(); };
+                    document.onmousedown = function () { window.focus(); };
+                    document.onmouseenter = function () { window.focus(); };
                 }
         this.recordingSource = this.audioContext.createMediaStreamSource(stream);
 
@@ -467,15 +465,16 @@ class UnityMicrophone {
             callback(false, "enumerateDevices() not supported");
             return;
         }
-                        if (document.hasFocus()) {
-                    console.log('✅ window has focus');
-                } else {
-                    console.log('⛔️ window does NOT have focus');
-                    document.ontouchstart = function () { window.focus(); };
-    document.onpointerdown = function () { window.focus(); };
-    document.onmousedown = function () { window.focus(); };
-    document.onmouseenter = function () { window.focus(); };
-                }
+        if (document.hasFocus()) {
+            console.log('✅ window has focus');
+        } else {
+             console.log('⛔️ window does NOT have focus');
+             window.focus();
+             document.ontouchstart = function () { window.focus(); };
+             document.onpointerdown = function () { window.focus(); };
+             document.onmousedown = function () { window.focus(); };
+             document.onmouseenter = function () { window.focus(); };
+        }
         navigator.mediaDevices.enumerateDevices()
             .then(function (devices) {
                 var outputDevicesArr = [];
