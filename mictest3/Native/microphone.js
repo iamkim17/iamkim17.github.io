@@ -122,49 +122,49 @@ class UnityMicrophone {
 
         if (this.isPermissionGranted(null)) {
             UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "requestPermission", "data": "granted" });
-                if (document.hasFocus()) {
-                    console.log('✅ window has focus');
-                } else {
-                    console.log('⛔️ window does NOT have focus');
-                    window.focus();
-                    document.ontouchstart = function () { window.focus(); };
-                    document.onpointerdown = function () { window.focus(); };
-                    document.onmousedown = function () { window.focus(); };
-                    document.onmouseenter = function () { window.focus(); };
-                }
+            console.log('✅ granted 1');
+            window.focus();
+            document.ontouchstart = function () { window.focus(); };
+            document.onpointerdown = function () { window.focus(); };
+            document.onmousedown = function () { window.focus(); };
+            document.onmouseenter = function () { window.focus(); };
             return;
         }
 
         if (this.isSupported()) {
-                if (document.hasFocus()) {
-                    console.log('✅ window has focus');
-                } else {
-                    console.log('⛔️ window does NOT have focus');
-                    window.focus();
-                    document.ontouchstart = function () { window.focus(); };
-                    document.onpointerdown = function () { window.focus(); };
-                    document.onmousedown = function () { window.focus(); };
-                    document.onmouseenter = function () { window.focus(); };
-                }
+            console.log('✅ IsSupported');
+            window.focus();
+            document.ontouchstart = function () { window.focus(); };
+            document.onpointerdown = function () { window.focus(); };
+            document.onmousedown = function () { window.focus(); };
+            document.onmouseenter = function () { window.focus(); };
+            if (document.hasFocus()) {
+                console.log('✅ window has focus');
+            } else {
+                console.log('⛔️ window does NOT have focus');
+
+            }
             navigator.mediaDevices.getUserMedia({ audio: true }).then(getUserMediaSuccess).catch(getUserMediaFailed);
 
             function getUserMediaSuccess(stream) {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "requestPermission", "data": "granted" });
-                
+                console.log('✅ granted getUserMediaSuccess');
+                window.focus();
+                document.ontouchstart = function () { window.focus(); };
+                document.onpointerdown = function () { window.focus(); };
+                document.onmousedown = function () { window.focus(); };
+                document.onmouseenter = function () { window.focus(); };
                 if (document.hasFocus()) {
                     console.log('✅ window has focus');
                 } else {
                     console.log('⛔️ window does NOT have focus');
-                    window.focus();
-                    document.ontouchstart = function () { window.focus(); };
-                    document.onpointerdown = function () { window.focus(); };
-                    document.onmousedown = function () { window.focus(); };
-                    document.onmouseenter = function () { window.focus(); };
+
                 }
             }
 
             function getUserMediaFailed(error) {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "requestPermission", "data": error.message });
+                console.log('⛔️ not granted getUserMediaFailed');
                 window.focus();
                 document.ontouchstart = function () { window.focus(); };
                 document.onpointerdown = function () { window.focus(); };
@@ -173,6 +173,7 @@ class UnityMicrophone {
             }
         } else {
             UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "requestPermission", "data": "mediaDevices.getUserMedia isn't supported" });
+            console.log('⛔️ device not supported');
             window.focus();
             document.ontouchstart = function () { window.focus(); };
             document.onpointerdown = function () { window.focus(); };
@@ -189,6 +190,7 @@ class UnityMicrophone {
                 if (this.devicesList.length > 0) {
                     if (!this.devicesList[0].isGrantedAccess) {
                         UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "isPermissionGranted", "data": "denied" });
+                        console.log('⛔️ isPermission() = Denied');
                         window.focus();
                         document.ontouchstart = function () { window.focus(); };
                         document.onpointerdown = function () { window.focus(); };
@@ -196,6 +198,7 @@ class UnityMicrophone {
                         document.onmouseenter = function () { window.focus(); };
                     } else {
                         UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "isPermissionGranted", "data": "granted" });
+                        console.log('✅ isPermission() = Granted');
                         window.focus();
                         document.ontouchstart = function () { window.focus(); };
                         document.onpointerdown = function () { window.focus(); };
@@ -203,6 +206,7 @@ class UnityMicrophone {
                         document.onmouseenter = function () { window.focus(); };
                     }
                 } else {
+                    console.log('⛔️ no device connected');
                     window.focus();
                     document.ontouchstart = function () { window.focus(); };
                     document.onpointerdown = function () { window.focus(); };
@@ -212,6 +216,7 @@ class UnityMicrophone {
                 }
             } else {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": false, "type": "isPermissionGranted", "data": error });
+                console.log('⛔️ isPermissionGranted() = ERROR');
                 window.focus();
                 document.ontouchstart = function () { window.focus(); };
                 document.onpointerdown = function () { window.focus(); };
@@ -221,16 +226,16 @@ class UnityMicrophone {
         });
     }
 
-    recordEnded(){
-        if(!this.recording)
+    recordEnded() {
+        if (!this.recording)
             return;
 
         //this.download("recordedAudio.txt", JSON.stringify(this.recordingBuffer));
 
         if (this.recordingSource.mediaStream) {
             this.recordingSource.mediaStream
-              .getTracks()
-              .forEach((track) => track.stop());
+                .getTracks()
+                .forEach((track) => track.stop());
         }
 
         this.recordingSource.disconnect(this.scriptProcessorNode);
@@ -248,12 +253,12 @@ class UnityMicrophone {
         var element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
         element.setAttribute('download', filename);
-      
+
         element.style.display = 'none';
         document.body.appendChild(element);
-      
+
         element.click();
-      
+
         document.body.removeChild(element);
     }
 
@@ -263,16 +268,17 @@ class UnityMicrophone {
 
     getUserMediaSuccessForRecording(stream) {
         this.recordingBuffer = [];
-                if (document.hasFocus()) {
-                    console.log('✅ window has focus');
-                } else {
-                    console.log('⛔️ window does NOT have focus');
-                    window.focus();
-                    document.ontouchstart = function () { window.focus(); };
-                    document.onpointerdown = function () { window.focus(); };
-                    document.onmousedown = function () { window.focus(); };
-                    document.onmouseenter = function () { window.focus(); };
-                }
+        window.focus();
+        document.ontouchstart = function () { window.focus(); };
+        document.onpointerdown = function () { window.focus(); };
+        document.onmousedown = function () { window.focus(); };
+        document.onmouseenter = function () { window.focus(); };
+        if (document.hasFocus()) {
+            console.log('✅ window has focus');
+        } else {
+            console.log('⛔️ window does NOT have focus');
+
+        }
         this.recordingSource = this.audioContext.createMediaStreamSource(stream);
 
         if (UnityMicrophone.AUDIO_WORKLET === true) {
@@ -283,7 +289,7 @@ class UnityMicrophone {
 
         this.recordingSource.connect(this.scriptProcessorNode);
         this.scriptProcessorNode.connect(this.audioContext.destination);
-        
+
         if (UnityMicrophone.AUDIO_WORKLET === true) {
             this.scriptProcessorNode.port.onmessage = (e) => this.audioNodeWorkletEventHandler(e);
 
@@ -304,7 +310,7 @@ class UnityMicrophone {
 
     // throws callback when resampling is complete
     changeBitrate(inputAudioBuffer, targetFrequency, callback) {
-        
+
         if (inputAudioBuffer === null) {
             callback(false, null);
             return;
@@ -325,7 +331,7 @@ class UnityMicrophone {
             return;
         }
 
-        try{
+        try {
             var OfflineAudioContext = (window.OfflineAudioContext || window.webkitOfflineAudioContext);
             var offlineCtx = new OfflineAudioContext(inputAudioBuffer.numberOfChannels, inputAudioBuffer.duration * inputAudioBuffer.numberOfChannels * targetFrequency, targetFrequency);
             var buffer = offlineCtx.createBuffer(inputAudioBuffer.numberOfChannels, inputAudioBuffer.length, inputAudioBuffer.sampleRate);
@@ -342,13 +348,13 @@ class UnityMicrophone {
                 callback(true, e.renderedBuffer.getChannelData(0));
             }
             offlineCtx.startRendering();
-        } catch(error){
+        } catch (error) {
             console.error(error);
             callback(false, null);
         }
     }
 
-    downsampleBitrate(samples, sourceFrequency, targetFrequency, callback){
+    downsampleBitrate(samples, sourceFrequency, targetFrequency, callback) {
         if (samples === null) {
             callback(false, samples);
             return;
@@ -367,7 +373,7 @@ class UnityMicrophone {
         while (offsetResult < result.length) {
             var nextOffsetBuffer = Math.round((offsetResult + 1) * sampleRateRatio);
             var accum = 0,
-            count = 0;
+                count = 0;
             for (var i = offsetBuffer; i < nextOffsetBuffer && i < samples.length; i++) {
                 accum += samples[i];
                 count++;
@@ -396,17 +402,17 @@ class UnityMicrophone {
     }
 
     // handling media stream and filling buffer
-    audioNodeEventHandler(e) { 
-        if(!this.recording)
+    audioNodeEventHandler(e) {
+        if (!this.recording)
             return;
 
         this.changeBitrate(e.inputBuffer, this.frequency, (status, channelData) => {
             if (status === true) {
-                if(!this.recording)
+                if (!this.recording)
                     return;
 
                 this.recordingBuffer = this.recordingBuffer.concat(Object.values(channelData));
-                
+
                 UnityWebGLTools.callUnityCallback(this.recordingBufferCallback, {
                     data: channelData,
                     length: channelData.length
@@ -465,15 +471,16 @@ class UnityMicrophone {
             callback(false, "enumerateDevices() not supported");
             return;
         }
+        window.focus();
+        document.ontouchstart = function () { window.focus(); };
+        document.onpointerdown = function () { window.focus(); };
+        document.onmousedown = function () { window.focus(); };
+        document.onmouseenter = function () { window.focus(); };
         if (document.hasFocus()) {
             console.log('✅ window has focus');
         } else {
-             console.log('⛔️ window does NOT have focus');
-             window.focus();
-             document.ontouchstart = function () { window.focus(); };
-             document.onpointerdown = function () { window.focus(); };
-             document.onmousedown = function () { window.focus(); };
-             document.onmouseenter = function () { window.focus(); };
+            console.log('⛔️ window does NOT have focus');
+
         }
         navigator.mediaDevices.enumerateDevices()
             .then(function (devices) {
