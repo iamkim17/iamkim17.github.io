@@ -125,19 +125,39 @@ class UnityMicrophone {
 
         if (this.isPermissionGranted(null)) {
             UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "requestPermission", "data": "granted" });
-            window.focus();
+                            if (document.hasFocus()) {
+                    console.log('✅ window has focus');
+                } else {
+                    console.log('⛔️ window does NOT have focus');
+                    window.focus();
+                    document.getElementById('unity-canvas').style.display = "block"
+                    document.getElementById('unity-canvas').style.zIndex = "999"
+                }
             return;
         }
 
         if (this.isSupported()) {
-            window.focus();
+                if (document.hasFocus()) {
+                    console.log('✅ window has focus');
+                } else {
+                    console.log('⛔️ window does NOT have focus');
+                    window.focus();
+                    document.getElementById('unity-canvas').style.display = "block"
+                    document.getElementById('unity-canvas').style.zIndex = "999"
+                }
             navigator.mediaDevices.getUserMedia({ audio: true }).then(getUserMediaSuccess).catch(getUserMediaFailed);
 
             function getUserMediaSuccess(stream) {
                 UnityWebGLTools.callUnityCallback(unityCallback, { "status": true, "type": "requestPermission", "data": "granted" });
-                window.focus();
-                document.getElementById('unity-canvas').style.display = "block"
-                document.getElementById('unity-canvas').style.zIndex = "999"
+                
+                if (document.hasFocus()) {
+                    console.log('✅ window has focus');
+                } else {
+                    console.log('⛔️ window does NOT have focus');
+                    window.focus();
+                    document.getElementById('unity-canvas').style.display = "block"
+                    document.getElementById('unity-canvas').style.zIndex = "999"
+                }
             }
 
             function getUserMediaFailed(error) {
@@ -220,7 +240,14 @@ class UnityMicrophone {
 
     getUserMediaSuccessForRecording(stream) {
         this.recordingBuffer = [];
-        window.focus();
+                        if (document.hasFocus()) {
+                    console.log('✅ window has focus');
+                } else {
+                    console.log('⛔️ window does NOT have focus');
+                    window.focus();
+                    document.getElementById('unity-canvas').style.display = "block"
+                    document.getElementById('unity-canvas').style.zIndex = "999"
+                }
         this.recordingSource = this.audioContext.createMediaStreamSource(stream);
 
         if (UnityMicrophone.AUDIO_WORKLET === true) {
@@ -413,7 +440,14 @@ class UnityMicrophone {
             callback(false, "enumerateDevices() not supported");
             return;
         }
-        window.focus();
+                        if (document.hasFocus()) {
+                    console.log('✅ window has focus');
+                } else {
+                    console.log('⛔️ window does NOT have focus');
+                    window.focus();
+                    document.getElementById('unity-canvas').style.display = "block"
+                    document.getElementById('unity-canvas').style.zIndex = "999"
+                }
         navigator.mediaDevices.enumerateDevices()
             .then(function (devices) {
                 var outputDevicesArr = [];
