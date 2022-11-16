@@ -6,21 +6,15 @@
   <script type="text/javascript" src="./Native/microphone.js"></script>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>MicWebGLNew2</title>
+  <title>MicWebGLNew3</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
   <link rel="manifest" href="manifest.webmanifest">
-  <script type='text/javascript'>
-    document.ontouchstart = function () { window.focus(); };
-    document.onpointerdown = function () { window.focus(); };
-    document.onmousedown = function () { window.focus(); };
-    document.onmouseenter = function () { window.focus(); };
-  </script>
 </head>
 
-<body onclick="window.focus()">
-  <div id="unity-container" onclick="window.focus()">
-    <canvas id="unity-canvas" width=960 height=600 onclick="window.focus()"></canvas>
+<body>
+  <div id="unity-container">
+    <canvas id="unity-canvas" width=960 height=600></canvas>
     <div id="unity-loading-bar">
       <div id="unity-logo"></div>
       <div id="unity-progress-bar-empty">
@@ -30,7 +24,6 @@
     <div id="unity-warning"> </div>
   </div>
   <script>
-    window.onload = function () { window.focus(); }
     const el = document.getElementById('unity-canvas');
     el.addEventListener("touchstart", function () { window.focus() });
     window.addEventListener("load", function () {
