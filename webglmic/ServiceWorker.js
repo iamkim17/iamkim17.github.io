@@ -1,9 +1,9 @@
 const cacheName = "Boomtech-WebMic-1.0";
 const contentToCache = [
     "Build/webglmic.loader.js",
-    "Build/webglmic.framework.js.unityweb",
-    "Build/webglmic.data.unityweb",
-    "Build/webglmic.wasm.unityweb",
+    "Build/webglmic.framework.js",
+    "Build/webglmic.data",
+    "Build/webglmic.wasm",
     "TemplateData/style.css"
 
 ];
