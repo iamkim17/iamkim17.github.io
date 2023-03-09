@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en-us" style="overflow: hidden;">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player</title>
+	<!-- mindar files -->
+	<script src="js/mindar-image.prod"></script>
+	<script src="js/aframe.min"></script>
+	<script src="js/mindar-image-aframe.prod"></script>
+	<style>.tmpHidden {display: none;}</style>
+	<style>
+      #custom-scanning-overlay {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		background: transparent;
+		z-index: 2;
+      }
+      @media (min-aspect-ratio: 1/1) {
+		#custom-scanning-overlay .inner {
+		  width: 50vh;
+		  height: 50vh;
+		}
+      }
+      @media (max-aspect-ratio: 1/1) {
+		#custom-scanning-overlay .inner {
+		  width: 80vw;
+		  height: 80vw;
+		}
+      }
+
+      #custom-scanning-overlay .inner {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+
+		/* IF YOU DON'T WANT THE SCANLINE, REMOVE LINES BELOW UNTIL FINISH */
+		background:
+		  linear-gradient(to right, white 10px, transparent 10px) 0 0,
+		  linear-gradient(to right, white 10px, transparent 10px) 0 100%,
+		  linear-gradient(to left, white 10px, transparent 10px) 100% 0,
+		  linear-gradient(to left, white 10px, transparent 10px) 100% 100%,
+		  linear-gradient(to bottom, white 10px, transparent 10px) 0 0,
+		  linear-gradient(to bottom, white 10px, transparent 10px) 100% 0,
+		  linear-gradient(to top, white 10px, transparent 10px) 0 100%,
+		  linear-gradient(to top, white 10px, transparent 10px) 100% 100%;
+		background-repeat: no-repeat;
+		background-size: 40px 40px;
+		/* FINISH REMOVING LINES HERE */
+      }
+
+      #custom-scanning-overlay.hidden {
+		display: none;
+      }
+
+      #custom-scanning-overlay img {
+		opacity: 0.6;
+		width: 90%;
+		align-self: center;
+      }
+
+      #custom-scanning-overlay .inner .scanline {
+		position: absolute;
+		width: 100%;
+		height: 10px;
+		background: white;
+		animation: move 2s linear infinite;
+      }
+      @keyframes move {
+		0%, 100% { top: 0% }
+		50% { top: calc(100% - 10px) }
+      }
+    </style>
+	<!-- finish mindar files -->
+	<script src="Build/globemindar.loader.js"></script>
+  </head>
+  <body style="text-align: center; margin: 0px; padding: 0px; overflow: hidden; ">
+	<div id="unity-container" class="unity-desktop" style="z-index: 2; position: absolute; top: 0; left: 0;">
+        <canvas id="unity-canvas" style="background: #1F1F20; width: 100%; height: 100%;"></canvas>
+		<div id="unity-loading-bar" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: none;">
+			<div id="unity-logo" style="width: 154px; height: 130px; background: url('images/unity-logo-dark.png') no-repeat center;"></div>
+			<div id="unity-progress-bar-empty" style="width: 141px; height: 18px; margin-top: 10px; margin-left: 6.5px; background: url('images/progress-bar-empty-dark.png') no-repeat center;">
+			  <div id="unity-progress-bar-full" style="width: 0%; height: 18px; margin-top: 10px; background: url('images/progress-bar-full-dark.png') no-repeat center;"></div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="custom-scanning-overlay" class="">
+		<div class="inner">
+			<img src="images/target.png">
+			<div class="scanline"></div><!-- IF YOU DON'T WANT THE SCANLINE, REMOVE THIS LINE -->
+		</div>
+    </div>
+	
+    <script>
+	  var container = document.querySelector("#unity-container");
+	  var canvas = document.querySelector("#unity-canvas");
+	  var loadingBar = document.querySelector("#unity-loading-bar");
+	  var progressBarFull = document.querySelector("#unity-progress-bar-full");
+	  
+	  /*mindar code*/
+	  var mindARStr = "<a-scene id='MindAR-scene' mindar-image='imageTargetSrc: Compiled Target/target.mind; autoStart: true; maxTrack: 1; numberTrack: 1; uiError:no; uiLoading:no; uiScanning: #custom-scanning-overlay; uiScanningOnTargetLost: no; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 5; missTolerance: 5;' color-space='sRGB' renderer='colorManagement: true, physicallyCorrectLights' vr-mode-ui='enabled: false' device-orientation-permission-ui='enabled: false'>\n\t<a-camera position='0 0 0' look-controls='enabled: false'></a-camera>\n";
+	  
+	  var imageTargetsStr = '';
+	  for (var i = 0; i < 1; ++i) {
+		imageTargetsStr += "\t<a-entity mindar-image-target='targetIndex: " + i + "'></a-entity>\n";
+	  }
+	  
+	  imageTargetsStr += "</a-scene>";
+	  
+	  mindARStr += imageTargetsStr;
+	  
+	  container.insertAdjacentHTML('beforebegin', mindARStr);
+	  
+	  var uiScanning, uiLoading;
+	  
+	  var uiScanningInterval = setInterval(() => {
+	    uiLoading = document.getElementById('MindAR-scene').getAttribute('mindar-image').uiLoading;
+		uiScanning = document.getElementById('MindAR-scene').getAttribute('mindar-image').uiScanning;
+		if (uiScanning) {
+			clearInterval(uiScanningInterval);
+			if (uiScanning !== 'no') {
+				uiScanning = uiScanning === 'yes' ? document.querySelector('.mindar-ui-scanning') : document.querySelector(uiScanning);
+				uiScanning.classList.add('tmpHidden');
+			}
+			if (uiLoading !== 'no') {
+				uiLoading = uiLoading === 'yes' ? document.querySelector('.mindar-ui-loading') : document.querySelector(uiLoading);
+				uiLoading.classList.add('tmpHidden');
+			}
+		}
+	  }, 0);
+	  
+	  /*finish mindar code*/
+      
+	  var buildUrl = "Build";
+	  var config = {
+        dataUrl: buildUrl + "/globemindar.data.unityweb",
+        frameworkUrl: buildUrl + "/globemindar.framework.js.unityweb",
+			codeUrl: buildUrl + "/globemindar.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Boomtech",
+        productName: "GlobeBusStopProject",
+        productVersion: "1.0",
+      };
+	  
+	  if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+		
+		container.style.width = '100%';
+		container.style.height = '100%';
+		
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
+      } else {
+
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+		
+		container.style.left = '50%';
+		container.style.top = '50%';
+		container.style.transform = 'translate(-50%, -50%)';
+		
+      }
+	  
+	  loadingBar.style.display = "block";
+
+      createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then(ui => {
+			loadingBar.style.display = "none";
+			
+			/*mindar code*/
+			canvas.style.background = "transparent";
+			uiScanning.classList?.remove('tmpHidden');
+			uiLoading.classList?.remove('tmpHidden');
+			/*finish mindar code*/
+			
+	  });
+    </script>
+  </body>
+</html>
