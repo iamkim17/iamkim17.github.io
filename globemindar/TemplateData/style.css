@@ -5,59 +5,37 @@
     font-weight: normal;
     font-style: normal;
 }
-
+.tmpHidden {
+    display: none;
+}
 html {
-    box-sizing: border-box;
-}
-
-*,
-*:before,
-*:after {
-    box-sizing: inherit;
-}
-
-html,
-body {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
-canvas {
-    display: block;
+    overflow: hidden;
 }
 
 body {
-    margin: 0;
+    text-align: center; 
+    margin: 0px; 
+    padding: 0px; 
+    overflow: hidden; 
 }
 
 #unity-container {
-    width: 100%;
-    height: 100%;
+    z-index: 2; 
+    position: absolute; 
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    height: 100%; 
 }
 
 #unity-canvas {
-    width: 100%;
+    background: #0C010A; 
+    width: 100%; 
     height: 100%;
-
-    background: #0C010A;
-}
-
-#loading-cover {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 #unity-logo {
-    display: inline-block;
+    display: inline-block; 
     background: url('images/logo-globe-riot.png') no-repeat center;
     background-size: 318px;
     width: 318px;
@@ -65,37 +43,29 @@ body {
 }
 
 #unity-loading-bar {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    position: absolute; 
+    left: 50%; 
+    top: 50%; 
+    transform: translate(-50%, -50%); 
+    display: none;
 }
 
 #unity-progress-bar-empty {
-    width: 80%;
+    width: 100%;
     height: 8px;
-    margin: 32px 20px 20px 10px;
+    margin: 32px 0 10px;
     text-align: left;
     border: none;
     padding: 0;
-    background: #E22CC5;
+    background: #E22CC5; 
     border-radius: 16px;
 }
 
 #unity-progress-bar-full {
     width: 0%;
     height: 100%;
-    background: #FFDC00;
+    background: #FFDC00; 
     border-radius: 16px;
-}
-
-.light #unity-progress-bar-empty {
-    border-color: black;
-}
-
-.light #unity-progress-bar-full {
-    background: black;
 }
 
 #unity-loading-text {
@@ -104,8 +74,4 @@ body {
     color: #91FFF9;
     text-align: center;
     margin-top: 16px;
-}
-
-.tmpHidden {
-    display: none;
 }
