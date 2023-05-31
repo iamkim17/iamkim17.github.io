@@ -1,4 +1,4 @@
-const cacheName = "DefaultCompany-MirrorSpeech-0.1";
+const cacheName = "Boomtech-MirrorSpeech-0.1";
 const contentToCache = [
     "Build/mirror.loader.js",
     "Build/mirror.framework.js.unityweb",
