@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | MediapipeHandTrackingTest</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+  <!-- Include Mediapipe hand tracking scripts and styles here -->
+  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div id="unity-container">
+    <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
+    <div id="unity-loading-bar">
+      <div id="unity-logo"></div>
+      <div id="unity-progress-bar-empty">
+        <div id="unity-progress-bar-full"></div>
+      </div>
+    </div>
+    <div id="unity-warning"></div>
+  </div>
+  <script>
+    // ... Your Unity WebGL loading script here ...
+    window.addEventListener("load", function () {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("ServiceWorker.js");
+      }
+    });
+
+    var container = document.querySelector("#unity-container");
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingBar = document.querySelector("#unity-loading-bar");
+    var progressBarFull = document.querySelector("#unity-progress-bar-full");
+    var warningBanner = document.querySelector("#unity-warning");
+
+    // Shows a temporary message banner/ribbon for a few seconds, or
+    // a permanent error message on top of the canvas if type=='error'.
+    // If type=='warning', a yellow highlight color is used.
+    // Modify or remove this function to customize the visually presented
+    // way that non-critical warnings and error messages are presented to the
+    // user.
+    function unityShowBanner(msg, type) {
+      function updateBannerVisibility() {
+        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+      }
+      var div = document.createElement('div');
+      div.innerHTML = msg;
+      warningBanner.appendChild(div);
+      if (type == 'error') div.style = 'background: red; padding: 10px;';
+      else {
+        if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+        setTimeout(function () {
+          warningBanner.removeChild(div);
+          updateBannerVisibility();
+        }, 5000);
+      }
+      updateBannerVisibility();
+    }
+
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/handtrackbuilld.loader.js";
+    var config = {
+      dataUrl: buildUrl + "/handtrackbuilld.data.unityweb",
+      frameworkUrl: buildUrl + "/handtrackbuilld.framework.js.unityweb",
+      codeUrl: buildUrl + "/handtrackbuilld.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "DefaultCompany",
+      productName: "MediapipeHandTrackingTest",
+      productVersion: "0.1",
+      showBanner: unityShowBanner,
+    };
+
+    // By default Unity keeps WebGL canvas render target size matched with
+    // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+    // Set this to false if you want to decouple this synchronization from
+    // happening inside the engine, and you would instead like to size up
+    // the canvas DOM size and WebGL render target sizes yourself.
+    // config.matchWebGLToCanvasSize = false;
+
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      // Mobile device style: fill the whole browser client area with the game canvas:
+      var meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+    }
+
+    // Initialize Mediapipe hand tracking here
+    const video = document.createElement("video");
+    video.id = "webcam";
+    video.style.position = "absolute"; // Change this according to your layout
+    video.autoplay = true;
+    video.playsinline = true;
+
+    // Get the parent element of the video
+    const videoParent = document.getElementById("unity-container");
+
+    // Append the video element to the parent
+    videoParent.appendChild(video);
+
+    // Get webcam stream and set it as the source of the video
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+
+        // Your Mediapipe code for video initialization goes here
+        const handLandmarker = new Hands.HandLandmarker();
+
+        async function setupMediapipe() {
+          const vision = await Hands.FilesetResolver.forVisionTasks(
+            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
+          );
+          const handLandmarker = await Hands.HandLandmarker.createFromOptions(
+            vision,
+            {
+              baseOptions: {
+                modelAssetPath: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`,
+                delegate: "GPU"
+              },
+              runningMode: "VIDEO",
+              numHands: 2
+            }
+          );
+
+          video.addEventListener("loadeddata", () => {
+            predictWebcam(handLandmarker, video);
+          });
+        }
+
+        async function predictWebcam(handLandmarker, video) {
+          const canvasElement = document.createElement("canvas");
+          video.parentElement.appendChild(canvasElement);
+          const canvasCtx = canvasElement.getContext("2d");
+
+          async function predict() {
+            const startTimeMs = performance.now();
+            const results = await handLandmarker.detectForVideo(video, startTimeMs);
+
+            canvasCtx.save();
+            canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            if (results.landmarks) {
+              for (const landmarks of results.landmarks) {
+                Hands.drawConnectors(canvasCtx, landmarks, Hands.HAND_CONNECTIONS, {
+                  color: "#00FF00",
+                  lineWidth: 5
+                });
+                Hands.drawLandmarks(canvasCtx, landmarks, { color: "#FF0000", lineWidth: 2 });
+              }
+            }
+            canvasCtx.restore();
+
+            requestAnimationFrame(predict);
+          }
+
+          predict();
+        }
+
+        setupMediapipe();
+      })
+      .catch((error) => {
+        console.error("Error accessing webcam:", error);
+      });
+    loadingBar.style.display = "block";
+    // Wait for Unity instance to load
+    var script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = () => {
+      createUnityInstance(canvas, config, (progress) => {
+        progressBarFull.style.width = 100 * progress + "%";
+      }).then((unityInstance) => {
+        loadingBar.style.display = "none";
+      }).catch((message) => {
+        alert(message);
+      });
+    };
+    document.body.appendChild(script);
+  </script>
+</body>
+
+</html>
