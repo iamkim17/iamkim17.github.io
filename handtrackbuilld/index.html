@@ -114,7 +114,34 @@
           // Initialize HandLandmarker from Hands namespace
           const handLandmarker = new Hands.HandLandmarker();
 
-          // Your Mediapipe code for video initialization goes here
+          // Set up canvas for drawing the hand landmarks
+          const canvasElement = document.createElement("canvas");
+          canvasElement.width = video.videoWidth;
+          canvasElement.height = video.videoHeight;
+          canvasElement.style.position = "absolute"; // Adjust according to layout
+          videoParent.appendChild(canvasElement);
+          const canvasCtx = canvasElement.getContext("2d");
+
+          async function predictWebcam() {
+            const results = await handLandmarker.detectForVideo(video);
+
+            canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            if (results.landmarks) {
+              for (const landmarks of results.landmarks) {
+                Hands.drawConnectors(canvasCtx, landmarks, Hands.HAND_CONNECTIONS, {
+                  color: "#00FF00",
+                  lineWidth: 5
+                });
+                Hands.drawLandmarks(canvasCtx, landmarks, { color: "#FF0000", lineWidth: 2 });
+              }
+            }
+
+            requestAnimationFrame(predictWebcam);
+          }
+
+          video.addEventListener("loadeddata", () => {
+            predictWebcam();
+          });
 
           loadingBar.style.display = "block";
           // Wait for Unity instance to load
