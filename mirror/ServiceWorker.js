@@ -2,6 +2,7 @@ const cacheName = "Boomtech-MirrorSpeech-0.1";
 const contentToCache = [
     "Build/mirror.loader.js",
     "Build/mirror.framework.js.unityweb",
+    "Build/mirror.worker.js.unityweb",
     "Build/mirror.data.unityweb",
     "Build/mirror.wasm.unityweb",
     "TemplateData/style.css"

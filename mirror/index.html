@@ -9,6 +9,7 @@
     <link rel="manifest" href="manifest.webmanifest">
   </head>
   <body>
+    <audio id="audioElement" src="MirrorMirror.mp3" loop></audio>
     <div id="unity-container">
       <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
@@ -31,7 +32,7 @@
       var loadingBar = document.querySelector("#unity-loading-bar");
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
       var warningBanner = document.querySelector("#unity-warning");
-
+      const audioElement = document.getElementById('audioElement');
       // Shows a temporary message banner/ribbon for a few seconds, or
       // a permanent error message on top of the canvas if type=='error'.
       // If type=='warning', a yellow highlight color is used.
@@ -61,6 +62,7 @@
       var config = {
         dataUrl: buildUrl + "/mirror.data.unityweb",
         frameworkUrl: buildUrl + "/mirror.framework.js.unityweb",
+        workerUrl: buildUrl + "/mirror.worker.js.unityweb",
         codeUrl: buildUrl + "/mirror.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Boomtech",
@@ -93,11 +95,37 @@
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
           loadingBar.style.display = "none";
+          
         }).catch((message) => {
           alert(message);
         });
       };
       document.body.appendChild(script);
+
+      function UnlockMusic() {
+            audioElement.muted = true;
+            audioElement.play();
+            setTimeout(() => {
+                audioElement.muted = false;
+                StopAudio();
+            }, 1000);
+        }
+
+        function PlayAudio() {
+            audioElement.play();
+            console.log("Audio Play")
+        }
+
+        function StopAudio() {
+            console.log("Audio Stop")
+            audioElement.pause();
+            audioElement.currentTime = 0;
+        }
+
+        function PauseAudio() {
+            console.log("Audio Pause")
+            audioElement.pause();
+        }
     </script>
   </body>
 </html>
