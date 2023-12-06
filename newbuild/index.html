@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | NewShoutProjectDemo</title>
+    <title>Unity Web Player | NewShoutProjectDemo</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
     <link rel="manifest" href="manifest.webmanifest">
@@ -63,6 +63,7 @@
       var buildUrl = "Build";
       var loaderUrl = buildUrl + "/newbuild.loader.js";
       var config = {
+        arguments: [],
         dataUrl: buildUrl + "/newbuild.data",
         frameworkUrl: buildUrl + "/newbuild.framework.js",
         codeUrl: buildUrl + "/newbuild.wasm",
